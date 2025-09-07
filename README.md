@@ -1,10 +1,19 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 # youtube_project
 =======
 # Getting Started with Create React App
+=======
+tailwind installation at 28:00
+>>>>>>> 6a0fd5b (making youtube project)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Redux
+ 1) Install @reduxjs/toolkit and react-redux 
+ 1) Create Store
+ 2) Then Create Slice
+ 3) Provide store to the app
 
+<<<<<<< HEAD
 ## Available Scripts
 
 In the project directory, you can run:
@@ -72,3 +81,6 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
 >>>>>>> 8f043ee (Initialize project using Create React App)
+=======
+ Note: Make work for one then scale it.
+>>>>>>> 6a0fd5b (making youtube project)

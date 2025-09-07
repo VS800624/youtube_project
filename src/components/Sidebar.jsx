@@ -1,0 +1,36 @@
+import React from 'react'
+import { useSelector } from 'react-redux'
+
+const Sidebar = () => {
+  const isMenuOpen = useSelector(store => store.app.isMenuOpen)
+
+  // Early return pattern
+  // if(!isMenuOpen) return null
+  
+  return !isMenuOpen ? null : (
+    <div className='p-5 shadow-lg  w-[12rem]'>
+      <ul>
+        <li>Home</li>
+        <li>Shorts</li>
+        <li>Videos</li>
+        <li>Live</li>
+      </ul>
+      <h1 className='font-bold pt-5'>Subscriptions</h1>
+      <ul>
+        <li>Movies</li>
+        <li>Sports</li>
+        <li>Gaming</li>
+        <li>Music</li>
+      </ul>
+      <h1 className='font-bold pt-5'>Watch Later</h1>
+      <ul>
+        <li>Movies</li>
+        <li>Sports</li>
+        <li>Gaming</li>
+        <li>Music</li>
+      </ul>
+    </div>
+  )
+}
+
+export default Sidebar
