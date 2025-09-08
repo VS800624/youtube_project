@@ -12,4 +12,4 @@ tailwind installation at 28:00
  2) Then Create Slice
  3) Provide store to the app
 
-
+read about searchParams
