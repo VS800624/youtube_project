@@ -1,6 +1,7 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import { toggleMenu } from "../utils/appSlice";
+import logo from "../images/youtube-logo.png"
 
 const Head = () => {
   const dispatch = useDispatch();
@@ -10,7 +11,7 @@ const Head = () => {
   };
   return (
     <header className="grid grid-flow-col p-5 m-2 shadow-lg">
-      <div className="flex col-span-1">
+      <div className="flex col-span-1 items-center">
         <img
           onClick={() => toggleMenuHandler()}
           className="h-8 cursor-pointer"
@@ -19,7 +20,7 @@ const Head = () => {
         />
         <img
           className="h-9 mx-2"
-          src="https://animationvisarts.com/wp-content/uploads/2023/09/Color-YouTube-logo-1030x571.jpg"
+          src={logo}
         />
       </div>
       <div className="col-span-10 text-center">
