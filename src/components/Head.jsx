@@ -20,6 +20,8 @@ const Head = () => {
    * searchQuery = iphone
    */
 
+//  this search is using live api, debouncing and caching
+
    const getSearchSuggestions = async() => {
     console.log("API call - "+searchQuery)
     const data = await fetch(YOUTUBE_SEARCH_API+ searchQuery) 
@@ -47,7 +49,7 @@ const Head = () => {
       }, 300)
       return () => {
         clearTimeout(timer)
-      }
+      } 
   }, [searchQuery])
 
   /**

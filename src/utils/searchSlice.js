@@ -9,7 +9,8 @@ const searchSlice = createSlice({
     reducers: {
         cacheResults: (state, action) => {
             // {"ip": ["iphone", "iphone11"]}
-            state = Object.assign(state, action.payload)   // basically this will merge the payload as well as state
+            return {...state, ...action.payload}  //not working
+            // state = Object.assign(state, action.payload)   // basically this will merge the payload as well as state  at 1:30:00
         }
     }
 })
@@ -22,5 +23,5 @@ export default searchSlice.reducer;
 
 
 /**
- * 
+ * LRU cache
  */
