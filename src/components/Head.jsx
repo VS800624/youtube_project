@@ -5,13 +5,12 @@ import logo from "../images/youtube-logo.png";
 import { YOUTUBE_SEARCH_API, GOOGLE_API_KEY } from "../utils/constants";
 import { cacheResults } from "../utils/searchSlice";
 import { useNavigate } from "react-router-dom";
+import SearchResults from "./SearchResults";
 
 const Head = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestion, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const [videos, setVideos] = useState([]);
-  const [selectedVideo, setSelectedVideo] = useState(null);
   const navigate = useNavigate()
 
   const searchCache = useSelector((store) => store.search);
@@ -41,23 +40,25 @@ const Head = () => {
     );
   };
 
-  const getVideos = async (searchTerm) => {
-    try {
-      const res = await fetch(
-        `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&q=${searchTerm}&key=${GOOGLE_API_KEY}&maxResults=5`
-      );
-      const data = await res.json();
-      console.log("Fetching videos for:", searchTerm);
-      console.log("API response:", data);
-      setVideos(data.items);
-    } catch (err) {
-      console.error("Error Fetching videos:", err);
-    }
-  };
+  // const getVideos = async (searchTerm) => {
+  //   try {
+  //     const res = await fetch(
+  //       `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&q=${searchTerm}&key=${GOOGLE_API_KEY}&maxResults=5`
+  //     );
+  //     const data = await res.json();
+  //     console.log("Fetching videos for:", searchTerm);
+  //     console.log("API response:", data);
+  //     setVideos(data.items);
+  //   } catch (err) {
+  //     console.error("Error Fetching videos:", err);
+  //   }
+  // };
 
   const handleSearch = () => {
-    navigate(`/results?search=${searchQuery}`)
+  if (searchQuery.trim()) {
+    navigate(`/results?search=${searchQuery}`);
   }
+};
 
   useEffect(() => {
     // api call
@@ -102,6 +103,7 @@ const Head = () => {
     dispatch(toggleMenu());
   };
   return (
+    <>
     <header className="grid grid-flow-col p-5 m-2 shadow-lg">
       <div className="flex col-span-1 items-center">
         <img
@@ -124,9 +126,11 @@ const Head = () => {
             }}
             onFocus={() => setShowSuggestions(true)}
             onBlur={() => setShowSuggestions(false)}
-            onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+            onKeyDown={(e) => e.key === "Enter" && handleSearch}
           />
-          <button className="border border-gray-400 p-2 px-4 rounded-r-full text-center">
+          <button className="border border-gray-400 p-2 px-4 rounded-r-full text-center"
+           onClick={handleSearch}
+          >
             🔍︎
           </button>
         </div>
@@ -140,7 +144,8 @@ const Head = () => {
                   onMouseDown={() => {
                     setSearchQuery(s);
                     setShowSuggestions(false);
-                    getVideos(s);
+                     handleSearch(); 
+                    // getVideos(s);
                   }}
                 >
                   🔍 {s}
@@ -158,6 +163,22 @@ const Head = () => {
         />
       </div>
     </header>
+
+    {/* <div className="mt-5">
+  {videos.map((video) => (
+    <div key={video.id.videoId} className="mb-5">
+      <h4 className="font-semibold">{video.snippet.title}</h4>
+      <img 
+        src={video.snippet.thumbnails.medium.url} 
+        alt={video.snippet.title} 
+        className="cursor-pointer"
+        onClick={() => setSelectedVideo(video.id.videoId)}
+      />
+    </div>
+  ))}
+</div> */}
+
+    </>
   );
 };
 
