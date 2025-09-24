@@ -1,16 +1,33 @@
 import { useEffect, useState } from "react";
-import { YOUTUBE_VIDEOS_API } from "../utils/constants";
+import { GOOGLE_API_KEY, YOUTUBE_VIDEOS_API } from "../utils/constants";
 import VideoCard, { AdVideoCard } from "./VideoCard";
 
 import { Link } from "react-router-dom";
 
-const VideoContainer = () => {
+const VideoContainer = ({category}) => {
   const [videos, setVideos] = useState([]);
+  //  console.log(category)
+   const catId = category[1];
+   
 
   const getVideos = async () => {
     try {
-      const data = await fetch(YOUTUBE_VIDEOS_API);
+      let url = ""
+
+      if (category === "All") {
+        // Most popular videos
+        url = `https://youtube.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics&chart=mostPopular&regionCode=US&maxResults=50&key=${GOOGLE_API_KEY}`;
+      } else if (catId) {
+        url = `https://youtube.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics&chart=mostPopular&regionCode=US&videoCategoryId=${catId}&maxResults=50&key=${GOOGLE_API_KEY}`;
+      } else {
+        // Fallback for categories with no official ID
+        url = `https://youtube.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=50&q=${encodeURIComponent(category)}&key=${GOOGLE_API_KEY}`;
+      }
+
+      const data = await fetch(url)
+      // const data = await fetch("https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&chart=mostPopular&regionCode=US&maxResults=50&key="+ GOOGLE_API_KEY);
       const result = await data.json();
+      console.log(result)
       if (result.items) {
         setVideos(result.items);
       } else {
@@ -31,16 +48,25 @@ const VideoContainer = () => {
       {videos.length === 0 ? (
         <p>Loading...</p>
       ) : (
-        videos.map((video) => ( 
-        <Link key={video.id} to={"/watch?v="+ video.id}>
+        videos.map((video) => { 
+          const videoId = video.id.videoId || video.id
+          return (
+        <Link key={videoId } to={"/watch?v="+ videoId}>
           <VideoCard  info={video} />
-        </Link> 
-      ))
+        </Link> )
+      })
       )}
     </div>
   );
 };
 
+// if (category === "All") {
+//         // Most popular videos
+//         url = `https://youtube.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics&chart=mostPopular&regionCode=US&maxResults=50&key=${GOOGLE_API_KEY}`;
+//       } else {
+//         // Search by category (q param)
+//         url = `https://youtube.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=50&q=${encodeURIComponent(category)}&key=${GOOGLE_API_KEY}`;
+//       }
 
 
 export default VideoContainer;

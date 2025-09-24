@@ -5,6 +5,8 @@ import { Link, useParams, useSearchParams } from "react-router-dom";
 import CommentsContainer from "./CommentsContainer";
 import LiveChat from "./LiveChat";
 import { GOOGLE_API_KEY } from "../utils/constants";
+import { timeAgo } from "../utils/helper";
+import CommentAPI from "./CommentAPI"
 
 const WatchPage = () => {
   const [searchParams] = useSearchParams();
@@ -50,25 +52,27 @@ const WatchPage = () => {
       //Step 3: Fetch more videos from the same channel
       let channelData = {item : []}
       if(channelId){
-        const channelRes = await fetch( `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&type=video&order=date&maxResults=20&key=${GOOGLE_API_KEY}`)
+        const channelRes = await fetch( `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&type=video&order=date&maxResults=30&key=${GOOGLE_API_KEY}`)
         channelData =  await channelRes.json()
       }
 
        // Step 4: Merge + remove duplicates + exclude current video
 
-       const combined = [ searchData.items,...channelData.items]
-       const uniqueVideos = []
-       const seen = new Set()
+       const combined = [ ...searchData.items,...channelData.items]
+      //  const uniqueVideos = []
+      //  const seen = new Set()
 
-       for (const item of combined) {
-        const vid = item.id?.videoId;
-        if(vid && vid !== videoId && !seen.has(vid)){
-          seen.add(vid)
-          uniqueVideos.push(item)
-        }
-       }
-
-       setRelatedVideos(uniqueVideos)
+      //  for (const item of combined) {
+      //   const vid = item.id?.videoId;
+      //   if(vid && vid !== videoId && !seen.has(vid)){
+      //     seen.add(vid)
+      //     uniqueVideos.push(item)
+      //   }
+      //  }
+      //  console.log(uniqueVideos)
+      //  setRelatedVideos(uniqueVideos)
+      //  setRelatedVideos(searchData.items || []);
+       setRelatedVideos(combined || [])
 
     } catch (err) {
       console.error(err);
@@ -107,25 +111,31 @@ const WatchPage = () => {
           <div className="w-full h-[600px] ml-5 overflow-y-scroll">
             <h3 className="font-semibold mb-3 ">Related Videos</h3>
             <div className="flex flex-col gap-3">
-              {relatedVideos.map((video) => (
+              {relatedVideos && relatedVideos.map((video) => (
                 <Link key={video.id.videoId} to={"/watch?v="+ video.id.videoId}>
                     <div
                       key={video.id.videoId}
                       className="flex gap-3 cursor-pointer"
                       // onClick={() => navigate(`/watch?v=${video.id.videoId}`)}
                     >
-                      <img
-                        src={video.snippet.thumbnails.medium.url}
-                        alt={video.snippet.title}
-                        className="w-40 rounded-lg"
-                      />
-                      <div>
-                        <p className="text-sm font-semibold">
-                          {video.snippet.title}
-                        </p>
-                        <p className="text-xs text-gray-600">
-                          {video.snippet.channelTitle}
-                        </p>
+                      {/* Thumbnail */}
+                        <img
+                          src={video.snippet.thumbnails.medium.url}
+                          alt={video.snippet.title}
+                          className="w-40 h-24 object-cover rounded-md flex-shrink-0"
+                        />
+
+                        {/* Video info */}
+                        <div className="flex flex-col ml-3 overflow-hidden">
+                          <h4 className="text-sm font-semibold line-clamp-2">
+                            {video.snippet.title}
+                          </h4>
+                          <p className="text-xs text-gray-600 mt-1">
+                            {video.snippet.channelTitle}
+                          </p>
+                          <p className="text-xs text-gray-500 mt-0.5">
+                             {timeAgo(video.snippet.publishTime)}
+                          </p>
                       </div>
                     </div>
                 </Link>
@@ -134,7 +144,8 @@ const WatchPage = () => {
           </div>
         </div>
       </div>
-      <CommentsContainer />
+      {/* <CommentsContainer  videoId ={videoId}/> */}
+      <CommentAPI videoId={videoId}/>
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import React from 'react'
 import Comment from './Comment'
 
-const CommentList = ({ comments = [] }) => {
+const CommentList = ({ comments = [], videoId }) => {
   return comments.map((comment, index) => {
     return (
       <div key={index}>

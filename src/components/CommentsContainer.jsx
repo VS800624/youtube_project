@@ -38,11 +38,11 @@ const commentData = [
 ]
 
 
-const CommentsContainer = () => {
+const CommentsContainer = ({videoId}) => {
     return (
         <div className="m-5 p-2">
             <h2 className="text-xl font-bold">Comments:</h2>
-            <CommentList comments={commentData}/>
+            <CommentList comments={commentData} videoId={videoId}/>
         </div>
     )
 }

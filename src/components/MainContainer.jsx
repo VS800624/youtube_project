@@ -1,14 +1,18 @@
-import React from 'react'
-import ButtonsList from './ButtonsList'
-import VideoContainer from './VideoContainer'
+import React, { useState } from "react";
+import ButtonsList from "./ButtonsList";
+import VideoContainer from "./VideoContainer";
 
 const MainContainer = () => {
+  const [selectedCategory, setSelectedCategory] = useState("All");
   return (
-    <div className=''>
-        <ButtonsList/>
-        <VideoContainer/>
+    <div className="">
+      <ButtonsList
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
+      />
+      <VideoContainer category={selectedCategory} />
     </div>
-  )
-}
+  );
+};
 
-export default MainContainer
+export default MainContainer;

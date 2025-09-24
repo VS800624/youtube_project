@@ -190,3 +190,26 @@ export function makeRandomMessage(length) {
     }
     return result;
 }
+
+export function timeAgo(publishTime) {
+  const now = new Date();
+  const publishedDate = new Date(publishTime);
+  const seconds = Math.floor((now - publishedDate) / 1000);
+
+  let interval = Math.floor(seconds / 31536000);
+  if (interval >= 1) return interval + (interval === 1 ? " year ago" : " years ago");
+
+  interval = Math.floor(seconds / 2592000);
+  if (interval >= 1) return interval + (interval === 1 ? " month ago" : " months ago");
+
+  interval = Math.floor(seconds / 86400);
+  if (interval >= 1) return interval + (interval === 1 ? " day ago" : " days ago");
+
+  interval = Math.floor(seconds / 3600);
+  if (interval >= 1) return interval + (interval === 1 ? " hour ago" : " hours ago");
+
+  interval = Math.floor(seconds / 60);
+  if (interval >= 1) return interval + (interval === 1 ? " minute ago" : " minutes ago");
+
+  return "Just now";
+}

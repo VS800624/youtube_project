@@ -1,4 +1,5 @@
 import React from 'react'
+import { timeAgo } from '../utils/helper'
 
 const VideoCard = ({info}) => {
     // console.log(info)
@@ -10,7 +11,10 @@ const VideoCard = ({info}) => {
         <ul>
             <li className='font-bold py-2'>{title}</li>
             <li>{channelTitle}</li>
-            <li>{statistics.viewCount} views</li>
+            <div className='flex gap-[10px]'>
+              <li>{statistics.viewCount} views</li>
+              <li>{timeAgo(snippet.publishTime)}</li>
+            </div>
         </ul>
     </div>
   )
