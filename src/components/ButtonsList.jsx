@@ -1,18 +1,8 @@
 import React from "react";
 import Button from "./Button";
+import { lists } from "../utils/constants";
 
-const lists = {
-  All: null,           
-  Gaming: 20,         
-  Music: 10,         
-  Sports: 17,         
-  News: 25,           
-  Entertainment: 24,       
-  Education: 27,
-  Movies: 1,           
-  Comedy: 23,
-  "Sci-Tech": 28         
-};
+
 
 
 
@@ -20,13 +10,13 @@ const lists = {
 
 const ButtonsList = ({ setSelectedCategory, selectedCategory }) => {
   return (
-    <div className="flex ">
-       {Object.entries(lists).map((list, index) => {
+    <div className="flex md:overscroll-none overflow-x-scroll md:w-full md:items-center md:justify-center w-[350px] scroll-smooth scrollbar-hide items-center ">
+       {Object.entries(lists).map(([list, id], index) => {
         return (
           <Button
             key={index}
             name={list}
-             isActive={selectedCategory === list[0]}
+             isActive={selectedCategory === list}
             onClick={() => setSelectedCategory(list)}
           />
         );

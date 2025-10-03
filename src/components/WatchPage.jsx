@@ -13,6 +13,7 @@ const WatchPage = () => {
   // console.log(searchParams.get("v"));
   const dispatch = useDispatch();
   const [relatedVideos, setRelatedVideos] = useState([]);
+  
   const videoId = searchParams.get("v");
 
   // const getRelatedVideos = async () => {
@@ -94,6 +95,7 @@ const WatchPage = () => {
       <div className="px-5 flex ">
         <div>
           <iframe
+          className=""
             width="900"
             height="600"
             src={"https://www.youtube.com/embed/" + videoId}

@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
-import { GOOGLE_API_KEY, YOUTUBE_VIDEOS_API } from "../utils/constants";
+import { GOOGLE_API_KEY, lists, YOUTUBE_VIDEOS_API } from "../utils/constants";
 import VideoCard, { AdVideoCard } from "./VideoCard";
 
 import { Link } from "react-router-dom";
 
 const VideoContainer = ({category}) => {
   const [videos, setVideos] = useState([]);
+  const [showInput, setShowInput] = useState(false)
   //  console.log(category)
-   const catId = category[1];
+   const catId = lists[category]
    
 
   const getVideos = async () => {
@@ -43,8 +44,8 @@ const VideoContainer = ({category}) => {
   }, []);
 
   return (
-    <div className="flex flex-wrap">
-     {videos[0] && <AdVideoCard info ={videos[0]}/>}
+    <div className="flex flex-col md:flex-row md:flex-wrap justify-center items-center">
+     {/* {videos[0] && <AdVideoCard info ={videos[0]}/>} */}
       {videos.length === 0 ? (
         <p>Loading...</p>
       ) : (
@@ -52,7 +53,7 @@ const VideoContainer = ({category}) => {
           const videoId = video.id.videoId || video.id
           return (
         <Link key={videoId } to={"/watch?v="+ videoId}>
-          <VideoCard  info={video} />
+          <VideoCard  info={video} onClick={() => setShowInput(false)}/>
         </Link> )
       })
       )}

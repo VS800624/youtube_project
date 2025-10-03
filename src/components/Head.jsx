@@ -11,6 +11,7 @@ const Head = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestion, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [showInput, setShowInput] = useState(false)
   const navigate = useNavigate()
 
   const searchCache = useSelector((store) => store.search);
@@ -25,20 +26,58 @@ const Head = () => {
 
   //  this search is using live api, debouncing and caching
 
-  const getSearchSuggestions = async () => {
-    // console.log("API call - "+searchQuery)
-    const data = await fetch(YOUTUBE_SEARCH_API + searchQuery);
-    const result = await data.json();
-    console.log(result);
-    setSuggestions(result[1]);
+ const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
-    // update cache
-    dispatch(
-      cacheResults({
-        [searchQuery]: result[1],
-      })
-    );
-  };
+const getSearchSuggestions = async () => {
+  if (!searchQuery) return;
+
+  if (isMobile) {
+    // MOBILE VERSION (YouTube Data API)
+    try {
+      const res = await fetch(
+        `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&q=${searchQuery}&key=${GOOGLE_API_KEY}&maxResults=5`
+      );
+      const data = await res.json();
+      // console.log("Mobile API Result:", data);
+
+      // Extract titles
+      const suggestions = data.items
+        ? data.items.map((item) => item.snippet.title)
+        : [];
+
+      setSuggestions(suggestions);
+
+      dispatch(
+        cacheResults({
+          [searchQuery]: suggestions,
+        })
+      );
+    } catch (err) {
+      console.error("Error fetching mobile suggestions:", err);
+      setSuggestions([]);
+    }
+  } else {
+    // DESKTOP VERSION (Suggest API)
+    try {
+      const res = await fetch(YOUTUBE_SEARCH_API + searchQuery);
+      const result = await res.json();
+      console.log("Desktop API Result:", result);
+
+      setSuggestions(result[1]);
+
+      dispatch(
+        cacheResults({
+          [searchQuery]: result[1],
+        })
+      );
+    } catch (err) {
+      console.error("Error fetching desktop suggestions:", err);
+      setSuggestions([]);
+    }
+  }
+};
+
+
 
   // const getVideos = async (searchTerm) => {
   //   try {
@@ -99,23 +138,28 @@ const Head = () => {
    * so, () => { clearTimeout(timer) } is a cleanup function. It stops the timer from executing if it’s no longer needed.
    */
 
+  useEffect(() => {}, [])
+
   const toggleMenuHandler = () => {
     dispatch(toggleMenu());
   };
   return (
     <>
-    <header className="grid grid-flow-col p-5 m-2 shadow-lg">
-      <div className="flex col-span-1 items-center">
+    <header className="flex items-center justify-between md:grid md:grid-flow-col p-5 m-2 shadow-lg sticky top-0  z-50 backdrop-blur">
+     {!showInput &&  <div className="flex md:col-span-1 col-span-4 items-center">
         <img
           onClick={() => toggleMenuHandler()}
-          className="h-8 cursor-pointer"
+          className="h-8 cursor-pointer justify-between"
           src="https://toppng.com/uploads/preview/square-svg-icon-free-menu-icon-sv-11563649031azv921gf4z.png"
           alt="menu"
         />
-        <img className="h-9 mx-2" src={logo} />
-      </div>
-      <div className="col-span-10 px-10">
-        <div>
+      </div>}
+        {!showInput && <div className=" ml-[50px] md:mx-auto flex-1 md:block flex justify-center">
+        <img className="h-9 mx-2 " src={logo} />
+        </div>}
+      <div className="md:col-span-10 col-span-5 px-10">
+        {/* desktop input */}
+        <div className="hidden md:block">
           <input
             placeholder="Search"
             className="w-1/2 border border-gray-400 p-2 rounded-l-full px-5"
@@ -134,13 +178,40 @@ const Head = () => {
             🔍︎
           </button>
         </div>
+        {/* mobile input */}
+        <div className="md:hidden flex">
+          {showInput &&  <i className="fa-solid fa-arrow-left relative text-[1.2rem] left-[-36px] top-[14px]"  onClick={() => {
+            window.history.back() 
+            setShowInput(!showInput)
+            }} ></i>}
+          {showInput && <input 
+            placeholder="Search"
+            className="w-full border border-gray-400 p-2  px-5 "
+            type="text"
+            value={searchQuery}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+            }}
+            onFocus={() => setShowSuggestions(true)}
+            onBlur={() => setShowSuggestions(false)}
+            onKeyDown={(e) => e.key === "Enter" && handleSearch}
+          />}
+          <button className="absolute top-[20px] right-[10px] md:static p-2 px-4 rounded-r-full text-center"
+           onClick={() => {
+            handleSearch()
+            setShowInput(!showInput)
+          }}
+          >
+            🔍︎
+          </button>
+        </div>
         {showSuggestions && (
-          <div className=" fixed bg-gray-200 py-2 px-5 w-[27rem] shadow-lg rounded-lg border border-gray-100">
+          <div className=" fixed bg-gray-200 py-2 md:px-5 px-2 w-[16rem]  md:w-[27rem] shadow-lg rounded-lg border border-gray-100">
             <ul className="">
               {suggestion.map((s) => (
                 <li
                   key={s}
-                  className="py-2 px-2 shadow-sm hover:bg-gray-100 cursor-pointer"
+                  className="py-2 px-2 shadow-sm hover:bg-gray-100 cursor-pointer "
                   onMouseDown={() => {
                     setSearchQuery(s);
                     setShowSuggestions(false);
@@ -155,7 +226,7 @@ const Head = () => {
           </div>
         )}
       </div>
-      <div className="col-span-1 ">
+      <div className="md:col-span-1 col-span-3 md:flex hidden">
         <img
           className="h-8"
           src="https://www.iconpacks.net/icons/2/free-user-icon-3297-thumb.png"

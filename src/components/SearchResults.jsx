@@ -5,6 +5,7 @@ import { timeAgo } from "../utils/helper";
 
 const SearchResults = () => {
   const [videos, setVideos] = useState([]);
+  const [showInput, setShowInput] = useState(false)
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -32,19 +33,22 @@ const SearchResults = () => {
   }, [searchTerm]);
 
   return (
-    <div className="mt-5 px-5">
+    <div className="mt-5 px-5 mx-auto">
       {videos.map((video) => (
         <div
           key={video.id.videoId}
-          className="mb-5 cursor-pointer flex gap-4"
-          onClick={() => navigate(`/watch?v=${video.id.videoId}`)}
+          className="mb-5 cursor-pointer flex flex-col md:flex-row  gap-4"
+          onClick={() => {
+            navigate(`/watch?v=${video.id.videoId}`)
+            setShowInput(true)
+        }}
         >
           <img
             src={video.snippet.thumbnails.medium.url}
             alt={video.snippet.title}
             className="rounded-lg"
           />
-          <div className="flex flex-col ml-3 overflow-hidden">
+          <div className="flex flex-col ml-3 ">
             <h4 className="text-sm font-semibold line-clamp-2">
               {video.snippet.title}
             </h4>
