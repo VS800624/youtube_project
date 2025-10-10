@@ -8,11 +8,13 @@ import { GOOGLE_API_KEY } from "../utils/constants";
 import { timeAgo } from "../utils/helper";
 import CommentAPI from "./CommentAPI"
 
+
 const WatchPage = () => {
   const [searchParams] = useSearchParams();
   // console.log(searchParams.get("v"));
   const dispatch = useDispatch();
   const [relatedVideos, setRelatedVideos] = useState([]);
+  const [commentsShow , setCommentsShow] = useState(false)
   
   const videoId = searchParams.get("v");
 
@@ -91,64 +93,141 @@ const WatchPage = () => {
     dispatch(closeMenu());
   }, [dispatch]);
   return (
-    <div className="flex flex-col w-full">
-      <div className="px-5 flex ">
-        <div>
-          <iframe
-          className=""
-            width="900"
-            height="600"
-            src={"https://www.youtube.com/embed/" + videoId}
-            title="YouTube video player"
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            referrerPolicy="strict-origin-when-cross-origin"
-            allowFullScreen
-          ></iframe>
-        </div>
-        <div className="w-full">
-          {/* <LiveChat/> */}
+    // <div className="flex flex-col w-full">
+    //   <div className="px-5 flex ">
+    //     <div >
+    //       <iframe
+    //       className="md:w-[900px] md:h-[600px]  w-[300px] h-[240px]"
+    //         // width="900"
+    //         // height="600"
+    //         src={"https://www.youtube.com/embed/" + videoId}
+    //         title="YouTube video player"
+    //         frameBorder="0"
+    //         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    //         referrerPolicy="strict-origin-when-cross-origin"
+    //         allowFullScreen
+    //       ></iframe>
+    //     </div>
+    //     <div className="w-full">
+    //       {/* <LiveChat/> */}
 
-          {/* Related videos */}
-          <div className="w-full h-[600px] ml-5 overflow-y-scroll">
-            <h3 className="font-semibold mb-3 ">Related Videos</h3>
-            <div className="flex flex-col gap-3">
-              {relatedVideos && relatedVideos.map((video) => (
-                <Link key={video.id.videoId} to={"/watch?v="+ video.id.videoId}>
-                    <div
-                      key={video.id.videoId}
-                      className="flex gap-3 cursor-pointer"
-                      // onClick={() => navigate(`/watch?v=${video.id.videoId}`)}
-                    >
-                      {/* Thumbnail */}
-                        <img
-                          src={video.snippet.thumbnails.medium.url}
-                          alt={video.snippet.title}
-                          className="w-40 h-24 object-cover rounded-md flex-shrink-0"
-                        />
+    //       {/* Related videos */}
+    //       <div className="w-full md:h-[600px] ml-5 overflow-y-scroll ">
+    //         <h3 className="font-semibold mb-3 ">Related Videos</h3>
+    //         <div className="flex flex-col gap-3">
+    //           {relatedVideos && relatedVideos.map((video) => (
+    //             <Link key={video.id.videoId} to={"/watch?v="+ video.id.videoId}>
+    //                 <div
+    //                   key={video.id.videoId}
+    //                   className="flex gap-3 cursor-pointer"
+    //                   // onClick={() => navigate(`/watch?v=${video.id.videoId}`)}
+    //                 >
+    //                   {/* Thumbnail */}
+    //                     <img
+    //                       src={video.snippet.thumbnails.medium.url}
+    //                       alt={video.snippet.title}
+    //                       className="w-40 h-24 object-cover rounded-md flex-shrink-0"
+    //                     />
 
-                        {/* Video info */}
-                        <div className="flex flex-col ml-3 overflow-hidden">
-                          <h4 className="text-sm font-semibold line-clamp-2">
-                            {video.snippet.title}
-                          </h4>
-                          <p className="text-xs text-gray-600 mt-1">
-                            {video.snippet.channelTitle}
-                          </p>
-                          <p className="text-xs text-gray-500 mt-0.5">
-                             {timeAgo(video.snippet.publishTime)}
-                          </p>
-                      </div>
-                    </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-      {/* <CommentsContainer  videoId ={videoId}/> */}
-      <CommentAPI videoId={videoId}/>
+    //                     {/* Video info */}
+    //                     <div className="flex flex-col ml-3 overflow-hidden">
+    //                       <h4 className="text-sm font-semibold line-clamp-2">
+    //                         {video.snippet.title}
+    //                       </h4>
+    //                       <p className="text-xs text-gray-600 mt-1">
+    //                         {video.snippet.channelTitle}
+    //                       </p>
+    //                       <p className="text-xs text-gray-500 mt-0.5">
+    //                          {timeAgo(video.snippet.publishTime)}
+    //                       </p>
+    //                   </div>
+    //                 </div>
+    //             </Link>
+    //           ))}
+    //         </div>
+    //       </div>
+
+          
+    //     </div>
+    //   </div>
+    //   {/* <CommentsContainer  videoId ={videoId}/> */}
+    //   <div className="hidden md:inline-block">
+    //   <CommentAPI videoId={videoId}/>
+    //   </div>
+    // </div>
+    <div className="flex flex-col w-full px-3 md:px-5">
+  <div className="flex flex-col md:flex-row w-full gap-5">
+    
+    {/* Video Player */}
+    <div className="flex justify-center w-full md:w-[70%]">
+      <iframe
+        className="w-full h-[240px] sm:h-[350px] md:h-[600px] rounded-lg"
+        src={`https://www.youtube.com/embed/${videoId}`}
+        title="YouTube video player"
+        frameBorder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerPolicy="strict-origin-when-cross-origin"
+        allowFullScreen
+      ></iframe>
     </div>
+
+    {/* Action Buttons */}
+          <div className="flex items-center gap-3 mt-3 md:mt-0">
+            <button className="bg-white px-3 py-1 rounded-full hover:bg-gray-200">👍 8.9K</button>
+            <button className="bg-white px-3 py-1 rounded-full hover:bg-gray-200">Share</button>
+            <button className="bg-white px-3 py-1 rounded-full hover:bg-gray-200">Save</button>
+          </div>
+
+      {/* Mobile Comments */}
+    <div className="md:hidden" onClick={() => setCommentsShow(true)}>
+    {!commentsShow && <h3 className="font-bold px-1 m-1">Comments</h3>}
+    {( commentsShow &&  
+      <div>
+        <CommentAPI videoId={videoId} />
+      </div>)}
+    </div>
+
+    {/* Related Videos */}
+    <div className="w-full md:w-[30%] md:h-[600px] overflow-y-auto">
+      <h3 className="font-semibold mb-3 text-lg md:text-base">Related Videos</h3>
+      <div className="flex flex-col gap-3">
+        {relatedVideos && relatedVideos.map((video) => (
+          <Link key={video.id.videoId} to={`/watch?v=${video.id.videoId}`}>
+            <div className="flex md:flex-row gap-3 cursor-pointer">
+              {/* Thumbnail */}
+              <img
+                src={video.snippet.thumbnails.medium.url}
+                alt={video.snippet.title}
+                className="w-32 h-20 sm:w-40 sm:h-24 object-cover rounded-md flex-shrink-0"
+              />
+
+              {/* Video info */}
+              <div className="flex flex-col overflow-hidden">
+                <h4 className="text-sm font-semibold line-clamp-2">
+                  {video.snippet.title}
+                </h4>
+                <p className="text-xs text-gray-600 mt-1">
+                  {video.snippet.channelTitle}
+                </p>
+                <p className="text-xs text-gray-500 mt-0.5">
+                  {timeAgo(video.snippet.publishTime)}
+                </p>
+              </div>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  {/* Comments */}
+
+  <div className="mt-5 hidden md:block">
+    <CommentAPI videoId={videoId} />
+  </div>
+
+</div>
+
   );
 };
 
