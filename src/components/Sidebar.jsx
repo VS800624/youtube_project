@@ -1,73 +1,59 @@
-import React from 'react'
-import { useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import React from "react";
+import { useSelector } from "react-redux";
+import {
+  Home, Code2, Music, GraduationCap, Podcast,
+  Film, Gamepad2, Radio, Dumbbell, Tv, Smile, Wand2
+} from "lucide-react";
+import { categoryIcons } from "../utils/constants";
+
 
 const Sidebar = () => {
-  const isMenuOpen = useSelector(store => store.app.isMenuOpen)
+  const isMenuOpen = useSelector((store) => store.app.isMenuOpen);
 
-  // Early return pattern
-  // if(!isMenuOpen) return null
-  
-  return !isMenuOpen ? null : (
-    <div className="fixed left-0 top-0 mt-[74px] h-screen md:w-60 w-1/2 bg-white/70 shadow-lg p-3 overflow-y-auto scrollbar-hide backdrop-blur">
-      {/* Main Menu */}
-      <ul className="space-y-1">
-        <li className="p-2 rounded-lg hover:bg-gray-100 cursor-pointer">
-          <Link to="/">Home</Link>
-        </li>
-        <li className="p-2 rounded-lg hover:bg-gray-100 cursor-pointer">
-          Shorts
-        </li>
-        <li className="p-2 rounded-lg hover:bg-gray-100 cursor-pointer">
-          Videos
-        </li>
-        <li className="p-2 rounded-lg hover:bg-gray-100 cursor-pointer">
-          Live
-        </li>
-      </ul>
+  // hide sidebar if menu closed
+  if (!isMenuOpen) return null;
 
-      {/* Divider */}
-      <hr className="my-3" />
-
-      {/* Subscriptions */}
-      <h1 className="font-semibold text-sm px-2 mb-1">Subscriptions</h1>
-      <ul className="space-y-1">
-        <li className="p-2 rounded-lg hover:bg-gray-100 cursor-pointer">
-          Movies
-        </li>
-        <li className="p-2 rounded-lg hover:bg-gray-100 cursor-pointer">
-          Sports
-        </li>
-        <li className="p-2 rounded-lg hover:bg-gray-100 cursor-pointer">
-          Gaming
-        </li>
-        <li className="p-2 rounded-lg hover:bg-gray-100 cursor-pointer">
-          Music
-        </li>
-      </ul>
-
-      {/* Divider */}
-      <hr className="my-3" />
-
-      {/* Watch Later */}
-      <h1 className="font-semibold text-sm px-2 mb-1">Watch Later</h1>
-      <ul className="space-y-1">
-        <li className="p-2 rounded-lg hover:bg-gray-100 cursor-pointer">
-          Movies
-        </li>
-        <li className="p-2 rounded-lg hover:bg-gray-100 cursor-pointer">
-          Sports
-        </li>
-        <li className="p-2 rounded-lg hover:bg-gray-100 cursor-pointer">
-          Gaming
-        </li>
-        <li className="p-2 rounded-lg hover:bg-gray-100 cursor-pointer">
-          Music
-        </li>
+  return (
+    <div className="fixed left-0 top-0 mt-[74px] h-screen md:w-60 w-1/2 
+                    bg-[#0f0f0f]/90 text-white shadow-lg p-3 overflow-y-auto 
+                    scrollbar-hide">
+      <ul className="space-y-2">
+        {Object.entries(categoryIcons).map(([name, Icon]) => (
+          <li
+            key={name}
+            className="flex items-center gap-3 px-3 py-2 rounded-lg 
+                       cursor-pointer hover:bg-gray-700 transition-all"
+          >
+            <span className="text-xl">{Icon}</span>
+            <span className="text-sm md:text-lg font-medium">{name}</span>
+          </li>
+        ))}
       </ul>
     </div>
-  )
-}
+  );
+};
+
+
+
+// const Sidebar = () => {
+//   const isMenuOpen = useSelector(store => store.app.isMenuOpen)
+
+//   // Early return pattern
+//   // if(!isMenuOpen) return null
+  
+//   return !isMenuOpen ? null : (
+//     <div className="fixed left-0 top-0 mt-[74px] h-screen md:w-60 w-1/2 bg-white/70 shadow-lg p-3 overflow-y-auto scrollbar-hide backdrop-blur">
+//       {/* Main Menu */}
+//       <ul className="space-y-1">
+//        {Object.entries(lists).map(([key, value]) => (
+//           <li key={key}>
+//             {key}
+//           </li>
+//         ))}
+//       </ul>
+//     </div>
+//   )
+// }
 
 // const Sidebar = () => {
 //     const isMenuOpen = useSelector(store => store.app.isMenuOpen)

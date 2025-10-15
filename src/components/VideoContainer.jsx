@@ -41,7 +41,7 @@ const VideoContainer = ({category}) => {
 
   useEffect(() => {
     getVideos();
-  }, []);
+  }, [category]);
 
   return (
     <div className="flex flex-col md:flex-row md:flex-wrap justify-center items-center">

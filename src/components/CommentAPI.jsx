@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { GOOGLE_API_KEY } from "../utils/constants";
 import { timeAgo } from "../utils/helper";
 
-const CommentsContainer = ({ videoId }) => {
+const CommentAPI = ({ videoId }) => {
   const [comments, setComments] = useState([]);
 
      const fetchComments = async () => {
@@ -24,7 +24,7 @@ const CommentsContainer = ({ videoId }) => {
 
   return (
      <div className="mt-6 mx-[20px] w-[90%]">
-      <h3 className="font-semibold text-lg mb-4">{comments.length} Comments</h3>
+      <h3 className="font-semibold text-lg mb-4" >{comments.length} Comments</h3>
       <div className="flex flex-col gap-4">
         {comments.map((c) => {
           const comment = c.snippet.topLevelComment.snippet;
@@ -60,4 +60,4 @@ const CommentsContainer = ({ videoId }) => {
   );
 };
 
-export default CommentsContainer;
+export default CommentAPI;

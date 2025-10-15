@@ -6,6 +6,9 @@ import { YOUTUBE_SEARCH_API, GOOGLE_API_KEY } from "../utils/constants";
 import { cacheResults } from "../utils/searchSlice";
 import { useNavigate } from "react-router-dom";
 import SearchResults from "./SearchResults";
+import { AiFillYoutube } from "react-icons/ai";
+import { ImYoutube2 } from "react-icons/im";
+import { HiOutlineMenu } from "react-icons/hi";
 
 const Head = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -147,12 +150,11 @@ const getSearchSuggestions = async () => {
     <>
     <header className="flex items-center justify-between md:grid md:grid-flow-col p-5 m-2 shadow-lg sticky top-0  z-50 backdrop-blur">
      {!showInput &&  <div className="flex md:col-span-1 col-span-4 items-center">
-        <img
-          onClick={() => toggleMenuHandler()}
-          className="h-8 cursor-pointer justify-between"
-          src="https://toppng.com/uploads/preview/square-svg-icon-free-menu-icon-sv-11563649031azv921gf4z.png"
-          alt="menu"
-        />
+          <HiOutlineMenu
+            onClick={toggleMenuHandler}
+            className="h-8 w-8 cursor-pointer"
+          />
+
       </div>}
         {!showInput && <div className=" ml-[50px] md:mx-auto flex-1 md:block flex justify-center">
         <img className="h-9 mx-2 " src={logo} />

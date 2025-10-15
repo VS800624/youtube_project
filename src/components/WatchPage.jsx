@@ -172,11 +172,11 @@ const WatchPage = () => {
     </div>
 
     {/* Action Buttons */}
-          <div className="flex items-center gap-3 mt-3 md:mt-0">
+          {/* <div className="flex items-center gap-3 mt-3 md:mt-0">
             <button className="bg-white px-3 py-1 rounded-full hover:bg-gray-200">👍 8.9K</button>
             <button className="bg-white px-3 py-1 rounded-full hover:bg-gray-200">Share</button>
             <button className="bg-white px-3 py-1 rounded-full hover:bg-gray-200">Save</button>
-          </div>
+          </div> */}
 
       {/* Mobile Comments */}
     <div className="md:hidden" onClick={() => setCommentsShow(true)}>
