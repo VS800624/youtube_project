@@ -6,17 +6,30 @@ import CommentsContainer from "./CommentsContainer";
 import LiveChat from "./LiveChat";
 import { GOOGLE_API_KEY } from "../utils/constants";
 import { timeAgo } from "../utils/helper";
-import CommentAPI from "./CommentAPI"
-
+import CommentAPI from "./CommentAPI";
 
 const WatchPage = () => {
   const [searchParams] = useSearchParams();
   // console.log(searchParams.get("v"));
   const dispatch = useDispatch();
   const [relatedVideos, setRelatedVideos] = useState([]);
-  const [commentsShow , setCommentsShow] = useState(false)
-  
+  const [commentsShow, setCommentsShow] = useState(false);
+  const [videoDetails, setVideoDetails] = useState(null);
+
   const videoId = searchParams.get("v");
+
+  const getVideoDetails = async () => {
+    try {
+      const res = await fetch(
+        `https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics,contentDetails&id=${videoId}&key=${GOOGLE_API_KEY}`
+      );
+      const data = await res.json();
+      console.log(data.items[0])
+      setVideoDetails(data.items[0]);
+    } catch (error) {
+      console.error("Error fetching  video details", error);
+    }
+  };
 
   // const getRelatedVideos = async () => {
   //   try {
@@ -37,11 +50,10 @@ const WatchPage = () => {
       const videoRes = await fetch(
         `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${GOOGLE_API_KEY}`
       );
-        const videoData = await videoRes.json();
-        const snippet = videoData.items[0]?.snippet;
-        const title = snippet?.title || "";
-        const channelId = snippet?.channelId;
-
+      const videoData = await videoRes.json();
+      const snippet = videoData.items[0]?.snippet;
+      const title = snippet?.title || "";
+      const channelId = snippet?.channelId;
 
       // Step 2: Search with title as keyword
       const searchRes = await fetch(
@@ -53,15 +65,17 @@ const WatchPage = () => {
       // setRelatedVideos(searchData.items || []);
 
       //Step 3: Fetch more videos from the same channel
-      let channelData = {item : []}
-      if(channelId){
-        const channelRes = await fetch( `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&type=video&order=date&maxResults=30&key=${GOOGLE_API_KEY}`)
-        channelData =  await channelRes.json()
+      let channelData = { item: [] };
+      if (channelId) {
+        const channelRes = await fetch(
+          `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&type=video&order=date&maxResults=30&key=${GOOGLE_API_KEY}`
+        );
+        channelData = await channelRes.json();
       }
 
-       // Step 4: Merge + remove duplicates + exclude current video
+      // Step 4: Merge + remove duplicates + exclude current video
 
-       const combined = [ ...searchData.items,...channelData.items]
+      const combined = [...searchData.items, ...channelData.items];
       //  const uniqueVideos = []
       //  const seen = new Set()
 
@@ -75,8 +89,7 @@ const WatchPage = () => {
       //  console.log(uniqueVideos)
       //  setRelatedVideos(uniqueVideos)
       //  setRelatedVideos(searchData.items || []);
-       setRelatedVideos(combined || [])
-
+      setRelatedVideos(combined || []);
     } catch (err) {
       console.error(err);
     }
@@ -86,6 +99,7 @@ const WatchPage = () => {
     if (videoId) {
       // getRelatedVideos()
       fetchRelated();
+      getVideoDetails();
     }
   }, [videoId]);
 
@@ -147,7 +161,6 @@ const WatchPage = () => {
     //         </div>
     //       </div>
 
-          
     //     </div>
     //   </div>
     //   {/* <CommentsContainer  videoId ={videoId}/> */}
@@ -156,78 +169,121 @@ const WatchPage = () => {
     //   </div>
     // </div>
     <div className="flex flex-col w-full px-3 md:px-5">
-  <div className="flex flex-col md:flex-row w-full gap-5">
-    
-    {/* Video Player */}
-    <div className="flex justify-center w-full md:w-[70%]">
-      <iframe
-        className="w-full h-[240px] sm:h-[350px] md:h-[600px] rounded-lg"
-        src={`https://www.youtube.com/embed/${videoId}`}
-        title="YouTube video player"
-        frameBorder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        referrerPolicy="strict-origin-when-cross-origin"
-        allowFullScreen
-      ></iframe>
-    </div>
+      <div className="flex flex-col md:flex-row w-full gap-5">
+        {/* Video Player */}
+        <div className="flex justify-center w-full md:w-[70%]">
+          <iframe
+            className="w-full h-[240px] sm:h-[350px] md:h-[600px] rounded-lg"
+            src={`https://www.youtube.com/embed/${videoId}`}
+            title="YouTube video player"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerPolicy="strict-origin-when-cross-origin"
+            allowFullScreen
+          ></iframe>
+        </div>
 
-    {/* Action Buttons */}
-          {/* <div className="flex items-center gap-3 mt-3 md:mt-0">
+        {/* Action Buttons */}
+        {/* <div className="flex items-center gap-3 mt-3 md:mt-0">
             <button className="bg-white px-3 py-1 rounded-full hover:bg-gray-200">👍 8.9K</button>
             <button className="bg-white px-3 py-1 rounded-full hover:bg-gray-200">Share</button>
             <button className="bg-white px-3 py-1 rounded-full hover:bg-gray-200">Save</button>
           </div> */}
 
-      {/* Mobile Comments */}
-    <div className="md:hidden" onClick={() => setCommentsShow(true)}>
-    {!commentsShow && <h3 className="font-bold px-1 m-1">Comments</h3>}
-    {( commentsShow &&  
-      <div>
-        <CommentAPI videoId={videoId} />
-      </div>)}
+        {/* Mobile Comments */}
+        <div className="md:hidden" onClick={() => setCommentsShow(true)}>
+          {!commentsShow && <h3 className="font-bold px-1 m-1">Comments</h3>}
+          {commentsShow && (
+            <div>
+              <CommentAPI videoId={videoId} />
+            </div>
+          )}
+        </div>
+
+        {/* Related Videos */}
+        <div className="w-full md:w-[30%] md:h-[600px] overflow-y-auto">
+          <h3 className="font-semibold mb-3 text-lg md:text-base">
+            Related Videos
+          </h3>
+          <div className="flex flex-col gap-3">
+            {relatedVideos &&
+              relatedVideos.map((video) => (
+                <Link
+                  key={video.id.videoId}
+                  to={`/watch?v=${video.id.videoId}`}
+                >
+                  <div className="flex md:flex-row gap-3 cursor-pointer">
+                    {/* Thumbnail */}
+                    <img
+                      src={video.snippet.thumbnails.medium.url}
+                      alt={video.snippet.title}
+                      className="w-32 h-20 sm:w-40 sm:h-24 object-cover rounded-md flex-shrink-0"
+                    />
+
+                    {/* Video info */}
+                    <div className="flex flex-col overflow-hidden">
+                      <h4 className="text-sm font-semibold line-clamp-2">
+                        {video.snippet.title}
+                      </h4>
+                      <p className="text-xs text-gray-600 mt-1">
+                        {video.snippet.channelTitle}
+                      </p>
+                      <p className="text-xs text-gray-500 mt-0.5">
+                        {timeAgo(video.snippet.publishTime)}
+                      </p>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+          </div>
+        </div>
+      </div>
+
+  {videoDetails && (
+  <div className="mt-3 p-2 l">
+    {/* Title */}
+    <h1 className="text-lg font-bold">{videoDetails.snippet.title}</h1>
+
+    {/* Channel Info and Subscribe */}
+    <div className="flex justify-between items-center mt-2">
+      <div className="flex items-center gap-2">
+        <img 
+          src={`https://yt3.ggpht.com/ytc/${videoDetails.snippet.channelId}=s88-c-k-c0x00ffffff-no-rj` || videoDetails.snippet.thumbnails.standard} 
+          alt="channel-logo" 
+          className="w-10 h-10 rounded-full"
+        />
+        <div>
+          <p className="font-semibold">{videoDetails.snippet.channelTitle}</p>
+          <p className="text-sm text-gray-500">{timeAgo(videoDetails.snippet.publishedAt)}</p>
+        </div>
+      </div>
+      <button className="bg-black text-white px-4 py-1 rounded-full hover:bg-gray-800">
+        Subscribe
+      </button>
     </div>
 
-    {/* Related Videos */}
-    <div className="w-full md:w-[30%] md:h-[600px] overflow-y-auto">
-      <h3 className="font-semibold mb-3 text-lg md:text-base">Related Videos</h3>
-      <div className="flex flex-col gap-3">
-        {relatedVideos && relatedVideos.map((video) => (
-          <Link key={video.id.videoId} to={`/watch?v=${video.id.videoId}`}>
-            <div className="flex md:flex-row gap-3 cursor-pointer">
-              {/* Thumbnail */}
-              <img
-                src={video.snippet.thumbnails.medium.url}
-                alt={video.snippet.title}
-                className="w-32 h-20 sm:w-40 sm:h-24 object-cover rounded-md flex-shrink-0"
-              />
+    {/* Stats and Actions */}
+    <div className="flex gap-4 mt-3 flex-wrap">
+      <button className="bg-gray-200 px-3 py-1 rounded-full">👍 {videoDetails.statistics.likeCount} Likes</button>
+      <button className="bg-gray-200 px-3 py-1 rounded-full">Share</button>
+      <button className="bg-gray-200 px-3 py-1 rounded-full">Clip</button>
+    </div>
 
-              {/* Video info */}
-              <div className="flex flex-col overflow-hidden">
-                <h4 className="text-sm font-semibold line-clamp-2">
-                  {video.snippet.title}
-                </h4>
-                <p className="text-xs text-gray-600 mt-1">
-                  {video.snippet.channelTitle}
-                </p>
-                <p className="text-xs text-gray-500 mt-0.5">
-                  {timeAgo(video.snippet.publishTime)}
-                </p>
-              </div>
-            </div>
-          </Link>
-        ))}
+    {/* Description */}
+    <div className="bg-gray-100 p-3 mt-4 rounded-lg">
+      <p className="text-sm text-gray-700 whitespace-pre-wrap">
+        {videoDetails.snippet.description.slice(0, 400)}...
+      </p>
+    </div>
+  </div>
+)}
+
+      {/* Comments */}
+
+      <div className="mt-5 hidden md:block">
+        <CommentAPI videoId={videoId} />
       </div>
     </div>
-  </div>
-
-  {/* Comments */}
-
-  <div className="mt-5 hidden md:block">
-    <CommentAPI videoId={videoId} />
-  </div>
-
-</div>
-
   );
 };
 
