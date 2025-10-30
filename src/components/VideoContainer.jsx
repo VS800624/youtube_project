@@ -1,39 +1,31 @@
 import { useEffect, useState } from "react";
-import { GOOGLE_API_KEY, lists, YOUTUBE_VIDEOS_API } from "../utils/constants";
-import VideoCard, { AdVideoCard } from "./VideoCard";
-
+import { useSelector } from "react-redux";
+import { GOOGLE_API_KEY, lists } from "../utils/constants";
+import VideoCard from "./VideoCard";
 import { Link } from "react-router-dom";
 
-const VideoContainer = ({category}) => {
+const VideoContainer = () => {
   const [videos, setVideos] = useState([]);
-  const [showInput, setShowInput] = useState(false)
-  //  console.log(category)
-   const catId = lists[category]
-   
+  const category = useSelector((store) => store.category.selectedCategory);
+  const catId = lists[category];
 
   const getVideos = async () => {
     try {
-      let url = ""
+      let url = "";
 
       if (category === "All") {
-        // Most popular videos
         url = `https://youtube.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics&chart=mostPopular&regionCode=US&maxResults=50&key=${GOOGLE_API_KEY}`;
       } else if (catId) {
         url = `https://youtube.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics&chart=mostPopular&regionCode=US&videoCategoryId=${catId}&maxResults=50&key=${GOOGLE_API_KEY}`;
       } else {
-        // Fallback for categories with no official ID
-        url = `https://youtube.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=50&q=${encodeURIComponent(category)}&key=${GOOGLE_API_KEY}`;
+        url = `https://youtube.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=50&q=${encodeURIComponent(
+          category
+        )}&key=${GOOGLE_API_KEY}`;
       }
 
-      const data = await fetch(url)
-      // const data = await fetch("https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&chart=mostPopular&regionCode=US&maxResults=50&key="+ GOOGLE_API_KEY);
-      const result = await data.json();
-      console.log(result)
-      if (result.items) {
-        setVideos(result.items);
-      } else {
-        console.error("No videos found:", result);
-      }
+      const res = await fetch(url);
+      const data = await res.json();
+      setVideos(data.items || []);
     } catch (err) {
       console.error("Error fetching videos:", err);
     }
@@ -45,17 +37,17 @@ const VideoContainer = ({category}) => {
 
   return (
     <div className="flex flex-col md:flex-row md:flex-wrap justify-center items-center">
-     {/* {videos[0] && <AdVideoCard info ={videos[0]}/>} */}
       {videos.length === 0 ? (
         <p>Loading...</p>
       ) : (
-        videos.map((video) => { 
-          const videoId = video.id.videoId || video.id
+        videos.map((video) => {
+          const videoId = video.id.videoId || video.id;
           return (
-        <Link key={videoId } to={"/watch?v="+ videoId}>
-          <VideoCard  info={video} onClick={() => setShowInput(false)}/>
-        </Link> )
-      })
+            <Link key={videoId} to={"/watch?v=" + videoId}>
+              <VideoCard info={video} />
+            </Link>
+          );
+        })
       )}
     </div>
   );

@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const appSlice = createSlice({
     name: "app",
     initialState: {
-        isMenuOpen: false,
+        isMenuOpen: true,
         isInputOpen: false
     },
     reducers: {
@@ -11,7 +11,7 @@ const appSlice = createSlice({
             state.isMenuOpen = !state.isMenuOpen;
         },
         closeMenu: (state) => {
-            state.isMenuOpen = true
+            state.isMenuOpen = false
         },
         closeInput: (state) => {
             state.isInputOpen = true

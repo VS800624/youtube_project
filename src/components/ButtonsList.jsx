@@ -1,26 +1,23 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Button from "./Button";
 import { lists } from "../utils/constants";
+import { setCategory } from "../utils/categorySlice";
 
+const ButtonsList = () => {
+  const dispatch = useDispatch();
+  const selectedCategory = useSelector((store) => store.category.selectedCategory);
 
-
-
-
-//side scroll bar banana hai
-
-const ButtonsList = ({ setSelectedCategory, selectedCategory }) => {
   return (
-    <div className="flex md:overscroll-none overflow-x-scroll md:w-full md:items-center md:justify-center w-[350px] scroll-smooth scrollbar-hide items-center ">
-       {Object.entries(lists).map(([list, id], index) => {
-        return (
-          <Button
-            key={index}
-            name={list}
-             isActive={selectedCategory === list}
-            onClick={() => setSelectedCategory(list)}
-          />
-        );
-      })}
+    <div className="flex overflow-x-scroll scrollbar-hide items-center w-[350px] md:w-full md:justify-center scroll-smooth">
+      {Object.entries(lists).map(([list]) => (
+        <Button
+          key={list}
+          name={list}
+          isActive={selectedCategory === list}
+          onClick={() => dispatch(setCategory(list))}
+        />
+      ))}
     </div>
   );
 };

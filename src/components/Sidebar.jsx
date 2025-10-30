@@ -1,37 +1,52 @@
 import React from "react";
-import { useSelector } from "react-redux";
-import {
-  Home, Code2, Music, GraduationCap, Podcast,
-  Film, Gamepad2, Radio, Dumbbell, Tv, Smile, Wand2
-} from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
 import { categoryIcons } from "../utils/constants";
-
+import { setCategory } from "../utils/categorySlice";
 
 const Sidebar = () => {
   const isMenuOpen = useSelector((store) => store.app.isMenuOpen);
-
-  // hide sidebar if menu closed
-  if (!isMenuOpen) return null;
+  const selectedCategory = useSelector((store) => store.category.selectedCategory)
+  const dispatch =  useDispatch()
 
   return (
-    <div className="fixed left-0 top-0 mt-[74px] h-screen md:w-60 w-1/2 
+    <>
+      {/* Overlay (semi-transparent background) */}
+      <div
+        className={`fixed inset-0 bg-black/50 z-40 transition-opacity duration-300 ${
+          isMenuOpen ? "opacity-100 visible" : "opacity-0 invisible"
+        }`}
+      ></div>
+
+      {/* Sidebar Panel */}
+      <div
+        className={`fixed left-0 top-0 mt-[74px] h-screen md:w-60 w-1/2 
                     bg-[#0f0f0f]/90 text-white shadow-lg p-3 overflow-y-auto 
-                    scrollbar-hide">
-      <ul className="space-y-2">
-        {Object.entries(categoryIcons).map(([name, Icon]) => (
-          <li
-            key={name}
-            className="flex items-center gap-3 px-3 py-2 rounded-lg 
-                       cursor-pointer hover:bg-gray-700 transition-all"
-          >
-            <span className="text-xl">{Icon}</span>
-            <span className="text-sm md:text-lg font-medium">{name}</span>
-          </li>
-        ))}
-      </ul>
-    </div>
+                    scrollbar-hide z-50 transform transition-transform duration-300 ease-in-out
+                    ${isMenuOpen ? "translate-x-0" : "-translate-x-full"}`}
+      >
+        <ul className="space-y-2">
+          {Object.entries(categoryIcons).map(([name, Icon]) => (
+            <li
+              key={name}
+              onClick={() => dispatch(setCategory(name))}
+              className={`flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-all 
+                ${
+                  selectedCategory === name
+                    ? "bg-gray-700 text-white"
+                    : "hover:bg-gray-700"
+                }`}
+            >
+              <span className="text-xl">{Icon}</span>
+              <span className="text-sm md:text-lg font-medium">{name}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </>
   );
 };
+
+
 
 
 
