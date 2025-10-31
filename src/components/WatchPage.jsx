@@ -24,7 +24,7 @@ const WatchPage = () => {
         `https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics,contentDetails&id=${videoId}&key=${GOOGLE_API_KEY}`
       );
       const data = await res.json();
-      console.log(data.items[0])
+      console.log(data.items[0]);
       setVideoDetails(data.items[0]);
     } catch (error) {
       console.error("Error fetching  video details", error);
@@ -168,76 +168,78 @@ const WatchPage = () => {
     //   <CommentAPI videoId={videoId}/>
     //   </div>
     // </div>
-   <div className="flex flex-col w-full px-3 md:px-5">
-  <div className="flex flex-col md:flex-row w-full gap-5">
-    
-    {/* LEFT SIDE: Video + Details */}
-    <div className="flex flex-col md:w-[70%]">
-      
-      {/* Video Player */}
-      <iframe
-        className="w-full h-[240px] sm:h-[350px] md:h-[600px] rounded-lg"
-        src={`https://www.youtube.com/embed/${videoId}`}
-        title="YouTube video player"
-        frameBorder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        referrerPolicy="strict-origin-when-cross-origin"
-        allowFullScreen
-      ></iframe>
+    <div className="flex flex-col w-full px-3 md:px-5">
+      <div className="flex flex-col md:flex-row w-full gap-5">
+        {/* LEFT SIDE: Video + Details */}
+        <div className="flex flex-col md:w-[70%]">
+          {/* Video Player */}
+          <iframe
+            className="w-full h-[240px] sm:h-[350px] md:h-[600px] rounded-lg"
+            src={`https://www.youtube.com/embed/${videoId}`}
+            title="YouTube video player"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerPolicy="strict-origin-when-cross-origin"
+            allowFullScreen
+          ></iframe>
 
-      {/* ✅ Video Details should be under the player */}
-      {videoDetails && (
-        <div className="mt-4 p-3 bg-white rounded-lg shadow">
-          {/* Title */}
-          <h1 className="text-xl font-bold">{videoDetails.snippet.title}</h1>
+          {/* ✅ Video Details should be under the player */}
+          {videoDetails && (
+            <div className="mt-4 p-3 bg-white rounded-lg shadow">
+              {/* Title */}
+              <h1 className="text-xl font-bold">
+                {videoDetails.snippet.title}
+              </h1>
 
-          {/* Channel Info & Subscribe */}
-          <div className="flex justify-between items-center mt-3">
-            <div className="flex items-center gap-3">
-              <img
-                src={
-                  videoDetails.snippet?.thumbnails?.default?.url ||
-                  "https://via.placeholder.com/40"
-                }
-                alt="channel-logo"
-                className="w-10 h-10 rounded-full"
-              />
-              <div>
-                <p className="font-semibold">{videoDetails.snippet.channelTitle}</p>
-                <p className="text-sm text-gray-500">
-                  {timeAgo(videoDetails.snippet.publishedAt)}
+              {/* Channel Info & Subscribe */}
+              <div className="flex justify-between items-center mt-3">
+                <div className="flex items-center gap-3">
+                  <img
+                    src={
+                      videoDetails.snippet?.thumbnails?.default?.url ||
+                      "https://via.placeholder.com/40"
+                    }
+                    alt="channel-logo"
+                    className="w-10 h-10 rounded-full"
+                  />
+                  <div>
+                    <p className="font-semibold">
+                      {videoDetails.snippet.channelTitle}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      {timeAgo(videoDetails.snippet.publishedAt)}
+                    </p>
+                  </div>
+                </div>
+                <button className="bg-black text-white  px-4 py-2 rounded-full hover:bg-slate-800">
+                  Subscribe
+                </button>
+              </div>
+
+              {/* Stats */}
+              <div className="flex gap-4 mt-4 flex-wrap">
+                <button className="bg-gray-200 px-4 py-2 rounded-full text-sm hover:bg-slate-400">
+                  👍 {videoDetails.statistics.likeCount}
+                </button>
+                <button className="bg-gray-200 px-4 py-2 rounded-full text-sm hover:bg-slate-400">
+                  Share
+                </button>
+                <button className="bg-gray-200 px-4 py-2 rounded-full text-sm hover:bg-slate-400">
+                  Clip
+                </button>
+              </div>
+
+              {/* Description */}
+              <div className="bg-gray-100 p-3 mt-4 rounded-lg">
+                <p className="text-sm text-gray-700 whitespace-pre-wrap">
+                  {videoDetails.snippet.description.slice(0, 400)}...
                 </p>
               </div>
             </div>
-            <button className="bg-black text-white px-4 py-2 rounded-full hover:bg-gray-800">
-              Subscribe
-            </button>
-          </div>
-
-          {/* Stats */}
-          <div className="flex gap-4 mt-4 flex-wrap">
-            <button className="bg-gray-200 px-4 py-2 rounded-full text-sm ">
-              👍 {videoDetails.statistics.likeCount}
-            </button>
-            <button className="bg-gray-200 px-4 py-2 rounded-full text-sm">
-              Share
-            </button>
-            <button className="bg-gray-200 px-4 py-2 rounded-full text-sm">
-              Clip
-            </button>
-          </div>
-
-          {/* Description */}
-          <div className="bg-gray-100 p-3 mt-4 rounded-lg">
-            <p className="text-sm text-gray-700 whitespace-pre-wrap">
-              {videoDetails.snippet.description.slice(0, 400)}...
-            </p>
-          </div>
+          )}
         </div>
-      )}
-    </div>
 
-      {/* Mobile Comments */}
+        {/* Mobile Comments */}
         <div className="md:hidden" onClick={() => setCommentsShow(true)}>
           {!commentsShow && <h3 className="font-bold px-1 m-1">Comments</h3>}
           {commentsShow && (
@@ -247,42 +249,43 @@ const WatchPage = () => {
           )}
         </div>
 
-    {/* RIGHT SIDE: Related Videos */}
-    <div className="w-full md:w-[30%] md:h-[600px] overflow-y-auto">
-      <h3 className="font-semibold mb-3 text-lg md:text-base">Related Videos</h3>
-      <div className="flex flex-col gap-3">
-        {relatedVideos.map((video) => (
-          <Link key={video.id.videoId} to={`/watch?v=${video.id.videoId}`}>
-            <div className="flex gap-3 cursor-pointer">
-              <img
-                src={video.snippet.thumbnails.medium.url}
-                alt={video.snippet.title}
-                className="w-32 h-20 sm:w-40 sm:h-24 object-cover rounded-md"
-              />
-              <div className="flex flex-col overflow-hidden">
-                <h4 className="text-sm font-semibold line-clamp-2">
-                  {video.snippet.title}
-                </h4>
-                <p className="text-xs text-gray-600 mt-1">
-                  {video.snippet.channelTitle}
-                </p>
-                <p className="text-xs text-gray-500 mt-0.5">
-                  {timeAgo(video.snippet.publishTime)}
-                </p>
-              </div>
-            </div>
-          </Link>
-        ))}
+        {/* RIGHT SIDE: Related Videos */}
+        <div className="w-full md:w-[30%] md:h-[600px] overflow-y-auto">
+          <h3 className="font-semibold mb-3 text-lg md:text-base">
+            Related Videos
+          </h3>
+          <div className="flex flex-col gap-3">
+            {relatedVideos.map((video) => (
+              <Link key={video.id.videoId} to={`/watch?v=${video.id.videoId}`}>
+                <div className="flex gap-3 cursor-pointer">
+                  <img
+                    src={video.snippet.thumbnails.medium.url}
+                    alt={video.snippet.title}
+                    className="w-32 h-20 sm:w-40 sm:h-24 object-cover rounded-md"
+                  />
+                  <div className="flex flex-col overflow-hidden">
+                    <h4 className="text-sm font-semibold line-clamp-2">
+                      {video.snippet.title}
+                    </h4>
+                    <p className="text-xs text-gray-600 mt-1">
+                      {video.snippet.channelTitle}
+                    </p>
+                    <p className="text-xs text-gray-500 mt-0.5">
+                      {timeAgo(video.snippet.publishTime)}
+                    </p>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Desktop Comments */}
+      <div className="mt-5 hidden md:block">
+        <CommentAPI videoId={videoId} />
       </div>
     </div>
-  </div>
-
-  {/* Desktop Comments */}
-  <div className="mt-5 hidden md:block">
-    <CommentAPI videoId={videoId} />
-  </div>
-</div>
-
   );
 };
 

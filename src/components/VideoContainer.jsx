@@ -61,5 +61,4 @@ const VideoContainer = () => {
 //         url = `https://youtube.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=50&q=${encodeURIComponent(category)}&key=${GOOGLE_API_KEY}`;
 //       }
 
-
 export default VideoContainer;

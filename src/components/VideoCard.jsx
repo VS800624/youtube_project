@@ -12,7 +12,7 @@ const VideoCard = ({info}) => {
             <li className='font-bold py-2'>{title}</li>
             <li>{channelTitle}</li>
             <div className='flex gap-[10px]'>
-              <li>{statistics.viewCount} views</li>
+              <li>{ Number(statistics.viewCount).toLocaleString("en-IN")} views</li>
               <li>{timeAgo(snippet.publishTime)}</li>
             </div>
         </ul>

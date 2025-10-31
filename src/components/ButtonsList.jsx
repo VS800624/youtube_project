@@ -10,12 +10,12 @@ const ButtonsList = () => {
 
   return (
     <div className="flex overflow-x-scroll scrollbar-hide items-center w-[350px] md:w-full md:justify-center scroll-smooth">
-      {Object.entries(lists).map(([list]) => (
+      {Object.entries(lists).map(([name, id]) => (
         <Button
-          key={list}
-          name={list}
-          isActive={selectedCategory === list}
-          onClick={() => dispatch(setCategory(list))}
+          key={name}
+          name={name}
+          isActive={selectedCategory === name}
+          onClick={() => dispatch(setCategory(name))}
         />
       ))}
     </div>
