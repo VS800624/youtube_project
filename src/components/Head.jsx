@@ -4,7 +4,7 @@ import { toggleMenu } from "../utils/appSlice";
 import logo from "../images/youtube-logo.png";
 import { YOUTUBE_SEARCH_API, GOOGLE_API_KEY } from "../utils/constants";
 import { cacheResults } from "../utils/searchSlice";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import SearchResults from "./SearchResults";
 import { AiFillYoutube } from "react-icons/ai";
 import { ImYoutube2 } from "react-icons/im";
@@ -157,7 +157,7 @@ const getSearchSuggestions = async () => {
 
       </div>}
         {!showInput && <div className=" ml-[50px] md:mx-auto flex-1 md:block flex justify-center">
-        <img className="h-9 mx-2 " src={logo} />
+          <Link to ="/"><img className="h-9 mx-2 " src={logo} /></Link>
         </div>}
       <div className="md:col-span-10 col-span-5 px-10">
         {/* desktop input */}

@@ -12,7 +12,7 @@ const Sidebar = () => {
     <>
       {/* Overlay (semi-transparent background) */}
       <div
-        className={`fixed inset-0 bg-black/50 z-40 transition-opacity duration-300 ${
+        className={`fixed inset-0 bg-black/40 z-40 transition-opacity duration-300 ${
           isMenuOpen ? "opacity-100 visible" : "opacity-0 invisible"
         }`}
       ></div>
@@ -20,7 +20,7 @@ const Sidebar = () => {
       {/* Sidebar Panel */}
       <div
         className={`fixed left-0 top-0 mt-[74px] h-screen md:w-60 w-1/2 
-                    bg-[#0f0f0f]/90 text-white shadow-lg p-3 overflow-y-auto 
+                    bg-gray-300/90  shadow-lg p-3 overflow-y-auto 
                     scrollbar-hide z-50 transform transition-transform duration-300 ease-in-out
                     ${isMenuOpen ? "translate-x-0" : "-translate-x-full"}`}
       >
@@ -32,8 +32,8 @@ const Sidebar = () => {
               className={`flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-all 
                 ${
                   selectedCategory === name
-                    ? "bg-gray-700 text-white"
-                    : "hover:bg-gray-700"
+                    ? "bg-gray-800 text-white"
+                    : "hover:bg-gray-800"
                 }`}
             >
               <span className="text-xl">{Icon}</span>

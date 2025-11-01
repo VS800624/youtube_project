@@ -5,7 +5,7 @@ import { Link, useParams, useSearchParams } from "react-router-dom";
 import CommentsContainer from "./CommentsContainer";
 import LiveChat from "./LiveChat";
 import { GOOGLE_API_KEY } from "../utils/constants";
-import { timeAgo } from "../utils/helper";
+import { formatCount, timeAgo } from "../utils/helper";
 import CommentAPI from "./CommentAPI";
 
 const WatchPage = () => {
@@ -219,7 +219,7 @@ const WatchPage = () => {
               {/* Stats */}
               <div className="flex gap-4 mt-4 flex-wrap">
                 <button className="bg-gray-200 px-4 py-2 rounded-full text-sm hover:bg-slate-400">
-                  👍 {videoDetails.statistics.likeCount}
+                  👍 {formatCount(videoDetails.statistics.likeCount)}
                 </button>
                 <button className="bg-gray-200 px-4 py-2 rounded-full text-sm hover:bg-slate-400">
                   Share
@@ -240,7 +240,7 @@ const WatchPage = () => {
         </div>
 
         {/* Mobile Comments */}
-        <div className="md:hidden" onClick={() => setCommentsShow(true)}>
+        <div className="md:hidden" onClick={() => setCommentsShow(!commentsShow)}>
           {!commentsShow && <h3 className="font-bold px-1 m-1">Comments</h3>}
           {commentsShow && (
             <div>
