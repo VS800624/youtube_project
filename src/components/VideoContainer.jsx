@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { GOOGLE_API_KEY, lists } from "../utils/constants";
 import VideoCard from "./VideoCard";
 import { Link } from "react-router-dom";
+import VideosLoader from "./VideoLoader";
 
 const VideoContainer = () => {
   const [videos, setVideos] = useState([]);
@@ -38,7 +39,8 @@ const VideoContainer = () => {
   return (
     <div className="flex flex-col md:flex-row md:flex-wrap justify-center items-center">
       {videos.length === 0 ? (
-        <p>Loading...</p>
+        // <p>Loading...</p>
+        <VideosLoader/>
       ) : (
         videos.map((video) => {
           const videoId = video.id.videoId || video.id;
